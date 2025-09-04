@@ -1,23 +1,12 @@
-// Protected user endpoints
-exports.getProfile = async (req, res, next) => {
-  try {
-    // req.user set by authMiddleware
-    const user = req.user;
-    res.json({ user });
-  } catch (err) {
-    next(err);
-  }
+export const getProfile = async (req, res) => {
+  res.json(req.user);
 };
 
-exports.updateProfile = async (req, res, next) => {
-  try {
-    const user = req.user;
-    const { name, mobile } = req.body;
-    if (name) user.name = name;
-    if (mobile) user.mobile = mobile;
-    await user.save();
-    res.json({ user });
-  } catch (err) {
-    next(err);
-  }
+export const updateProfile = async (req, res) => {
+  const user = req.user;
+  user.name = req.body.name || user.name;
+  user.mobile = req.body.mobile || user.mobile;
+  if (req.body.password) user.password = req.body.password;
+  await user.save();
+  res.json(user);
 };
