@@ -1,36 +1,30 @@
-import React, { useState } from 'react';
-import { forgotPassword } from '../api/authApi';
-import { Link } from 'react-router-dom';
-import InputField from '../components/InputField';
+import React, { useState } from "react";
+import { forgotPassword } from "../api/authApi";
+import InputField from "../components/InputField";
 
 export default function ForgotPassword() {
-  const [email, setEmail] = useState('');
-  const [msg, setMsg] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [msg, setMsg] = useState("");
 
-  const submit = async (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    setMsg('');
-    setLoading(true);
+    setMsg("");
     try {
       const res = await forgotPassword({ email });
-      setMsg(res.data.message || 'If account exists, an email will be sent.');
+      setMsg(res.data.message || "Password reset link sent to your email.");
     } catch (err) {
-      setMsg(err.response?.data?.message || 'Error sending reset link');
-    } finally {
-      setLoading(false);
+      setMsg(err.response?.data?.message || "Error sending reset email.");
     }
   };
 
   return (
     <div>
-      <h2>Forgot password</h2>
-      <form onSubmit={submit}>
-        <InputField name="email" type="email" label="Enter registered email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required />
-        <button type="submit" disabled={loading}>{loading ? 'Sending…' : 'Send reset link'}</button>
+      <h2>Forgot Password</h2>
+      <form onSubmit={onSubmit}>
+        <InputField type="email" name="email" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <button type="submit">Send Reset Link</button>
       </form>
-      <p className="small">{msg}</p>
-      <p className="center small"><Link to="/login">Back to login</Link></p>
+      {msg && <p>{msg}</p>}
     </div>
   );
 }
