@@ -1,13 +1,30 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { getProfile } from '../api/authApi';
 
 export default function Dashboard() {
-  const { user } = useAuth();
+  const { token, user } = useAuth();
+  const [profile, setProfile] = useState(user);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        if (token) {
+          const res = await getProfile(token);
+          setProfile(res.data.user || res.data);
+        }
+      } catch (err) {
+        // ignore; user might be stale
+      }
+    })();
+  }, [token]);
+
   return (
     <div>
       <h2>Dashboard</h2>
-      <p>Welcome, <strong>{user?.name}</strong></p>
-      <p className="small">Email: {user?.email}</p>
+      <p>Welcome, <strong>{profile?.name || 'User'}</strong></p>
+      <p className="small">Email: {profile?.email}</p>
+      <p className="small">Joined: {profile?.createdAt ? new Date(profile.createdAt).toLocaleString() : '—'}</p>
     </div>
   );
 }
