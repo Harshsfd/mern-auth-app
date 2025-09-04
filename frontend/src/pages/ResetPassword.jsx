@@ -1,43 +1,33 @@
-import React, { useState } from 'react';
-import { resetPassword } from '../api/authApi';
-import { useSearchParams, Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { resetPassword } from "../api/authApi";
+import InputField from "../components/InputField";
 
 export default function ResetPassword() {
-  const [searchParams] = useSearchParams();
-  const token = searchParams.get('token');
-  const id = searchParams.get('id');
+  const { token } = useParams();
+  const navigate = useNavigate();
+  const [password, setPassword] = useState("");
+  const [msg, setMsg] = useState("");
 
-  const [password, setPassword] = useState('');
-  const [msg, setMsg] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  const submit = async (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    setMsg('');
-    if (!token || !id) {
-      setMsg('Invalid reset link');
-      return;
-    }
-    setLoading(true);
     try {
-      const res = await resetPassword(token, id, { password });
-      setMsg(res.data.message || 'Password reset successful');
+      const res = await resetPassword(token, { password });
+      setMsg(res.data.message || "Password reset successful!");
+      navigate("/login");
     } catch (err) {
-      setMsg(err.response?.data?.message || 'Error resetting password');
-    } finally {
-      setLoading(false);
+      setMsg(err.response?.data?.message || "Reset failed.");
     }
   };
 
   return (
     <div>
-      <h2>Reset password</h2>
-      <form onSubmit={submit}>
-        <input type="password" placeholder="New password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        <button type="submit" disabled={loading}>{loading ? 'Resetting…' : 'Reset Password'}</button>
+      <h2>Reset Password</h2>
+      <form onSubmit={onSubmit}>
+        <InputField type="password" name="password" label="New Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <button type="submit">Reset Password</button>
       </form>
-      <p className="small">{msg}</p>
-      <p className="center small"><Link to="/login">Back to login</Link></p>
+      {msg && <p>{msg}</p>}
     </div>
   );
 }
