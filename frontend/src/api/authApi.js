@@ -1,24 +1,8 @@
 import axios from "axios";
 
-const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL, // Vercel me jo env set kiya hai
-});
+const API = import.meta.env.VITE_API_URI; 
 
-// Register
-export const registerUser = (data) => API.post("/auth/register", data);
-
-// Login
-export const loginUser = (data) => API.post("/auth/login", data);
-
-// Forgot password
-export const forgotPassword = (data) => API.post("/auth/forgot-password", data);
-
-// Reset password
-export const resetPassword = (token, data) =>
-  API.post(`/auth/reset-password/${token}`, data);
-
-// Get user profile
-export const getProfile = (token) =>
-  API.get("/users/profile", {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const registerUser = (data) => axios.post(`${API}/auth/register`, data);
+export const loginUser = (data) => axios.post(`${API}/auth/login`, data);
+export const forgotPassword = (data) => axios.post(`${API}/auth/forgot-password`, data);
+export const resetPassword = (token, data) => axios.post(`${API}/auth/reset-password/${token}`, data);
