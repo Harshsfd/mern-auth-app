@@ -1,16 +1,22 @@
-import React from 'react';
+import React from "react";
 
-export default function InputField({ label, name, type = 'text', value, onChange, placeholder, required = false }) {
+export default function InputField({ label, type = "text", name, value, onChange, placeholder, required }) {
   return (
-    <div className="form-row">
-      {label && <label style={{ display: 'block', marginBottom: 6 }}>{label}</label>}
+    <div style={{ marginBottom: "12px" }}>
+      <label style={{ display: "block", marginBottom: "4px" }}>{label}</label>
       <input
-        name={name}
         type={type}
+        name={name}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
         required={required}
+        style={{
+          width: "100%",
+          padding: "8px",
+          border: "1px solid #ccc",
+          borderRadius: "6px",
+        }}
       />
     </div>
   );
