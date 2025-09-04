@@ -6,20 +6,21 @@ const sendEmail = async (to, subject, html) => {
       service: "gmail",
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
+        pass: process.env.EMAIL_PASS
+      }
     });
 
     await transporter.sendMail({
-      from: `"MERN Auth App" <${process.env.EMAIL_USER}>`,
+      from: `"Auth App" <${process.env.EMAIL_USER}>`,
       to,
       subject,
-      html,
+      html
     });
 
-    console.log("Email sent successfully");
-  } catch (error) {
-    console.error("Email error:", error.message);
+    console.log("📩 Email sent to:", to);
+  } catch (err) {
+    console.error("❌ Email send error:", err.message);
+    throw new Error("Email could not be sent");
   }
 };
 
