@@ -1,17 +1,13 @@
-const express = require('express');
+import express from "express";
+import { register, login, logout } from "../controllers/authController.js";
+import { forgotPassword, resetPassword } from "../controllers/passwordController.js";
+
 const router = express.Router();
-const authController = require('../controllers/authController');
-const passwordController = require('../controllers/passwordController');
 
-router.post('/register', authController.register);
-router.post('/login', authController.login);
-router.post('/logout', authController.logout);
+router.post("/register", register);
+router.post("/login", login);
+router.post("/logout", logout);
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password/:token", resetPassword);
 
-// email verification link: GET /api/auth/verify-email?token=...
-router.get('/verify-email', authController.verifyEmail);
-
-// forgot/reset
-router.post('/forgot-password', passwordController.forgotPassword);
-router.post('/reset-password', passwordController.resetPassword); // expects token+id in query
-
-module.exports = router;
+export default router;
