@@ -1,12 +1,21 @@
-export const getProfile = async (req, res) => {
+// @desc    Get user profile
+export const getUserProfile = async (req, res) => {
   res.json(req.user);
 };
 
-export const updateProfile = async (req, res) => {
-  const user = req.user;
-  user.name = req.body.name || user.name;
-  user.mobile = req.body.mobile || user.mobile;
-  if (req.body.password) user.password = req.body.password;
-  await user.save();
-  res.json(user);
+// @desc    Update user profile
+export const updateUserProfile = async (req, res) => {
+  try {
+    req.user.name = req.body.name || req.user.name;
+    req.user.email = req.body.email || req.user.email;
+    if (req.body.password) req.user.password = req.body.password;
+    const updatedUser = await req.user.save();
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
