@@ -1,22 +1,21 @@
-import React, { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { resetPassword } from "../api/authApi";
-import InputField from "../components/InputField";
+import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { resetPassword } from '../api/authApi';
+import InputField from '../components/InputField';
 
 export default function ResetPassword() {
   const { token } = useParams();
-  const navigate = useNavigate();
-  const [password, setPassword] = useState("");
-  const [msg, setMsg] = useState("");
+  const [password, setPassword] = useState('');
+  const [msg, setMsg] = useState('');
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    setMsg('');
     try {
       const res = await resetPassword(token, { password });
-      setMsg(res.data.message || "Password reset successful!");
-      navigate("/login");
+      setMsg(res.data.message || 'Password reset successful.');
     } catch (err) {
-      setMsg(err.response?.data?.message || "Reset failed.");
+      setMsg(err.response?.data?.message || 'Error resetting password.');
     }
   };
 
@@ -27,7 +26,7 @@ export default function ResetPassword() {
         <InputField type="password" name="password" label="New Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         <button type="submit">Reset Password</button>
       </form>
-      {msg && <p>{msg}</p>}
+      <p>{msg}</p>
     </div>
   );
 }
