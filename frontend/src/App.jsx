@@ -13,7 +13,7 @@ export default function App() {
   const { user } = useAuth();
 
   return (
-    <div>
+    <>
       <nav className="nav">
         {!user && <Link to="/login">Login</Link>}
         {!user && <Link to="/register">Register</Link>}
@@ -34,6 +34,6 @@ export default function App() {
           } />
         </Routes>
       </div>
-    </div>
+    </>
   );
 }
