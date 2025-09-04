@@ -1,39 +1,47 @@
 import User from "../models/User.js";
-import { createJWT } from "../config/jwt.js";
+import generateToken from "../utils/generateToken.js";
 
-export const register = async (req, res, next) => {
+// @desc    Register user
+export const registerUser = async (req, res) => {
+  const { name, email, password } = req.body;
   try {
-    const { name, email, password, mobile } = req.body;
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(400).json({ message: "User already exists" });
 
-    const user = await User.create({ name, email, password, mobile });
-    const token = createJWT(user._id);
+    const user = await User.create({ name, email, password });
 
-    res.cookie("token", token, { httpOnly: true, sameSite: "strict" });
-    res.json({ _id: user._id, name: user.name, email: user.email, token });
-  } catch (error) {
-    next(error);
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      token: generateToken(user._id),
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
-export const login = async (req, res, next) => {
+// @desc    Login user
+export const loginUser = async (req, res) => {
+  const { email, password } = req.body;
   try {
-    const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (user && (await user.matchPassword(password))) {
-      const token = createJWT(user._id);
-      res.cookie("token", token, { httpOnly: true, sameSite: "strict" });
-      res.json({ _id: user._id, name: user.name, email: user.email, token });
+      res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        token: generateToken(user._id),
+      });
     } else {
-      res.status(401).json({ message: "Invalid credentials" });
+      res.status(401).json({ message: "Invalid email or password" });
     }
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
-export const logout = (req, res) => {
-  res.clearCookie("token");
+// @desc    Logout user
+export const logoutUser = async (req, res) => {
   res.json({ message: "Logged out successfully" });
 };
