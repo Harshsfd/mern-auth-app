@@ -1,17 +1,9 @@
 import React from 'react';
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
-export default function InputField({ label, name, type = 'text', value, onChange, placeholder, required = false }) {
-  return (
-    <div className="form-row">
-      {label && <label style={{ display: 'block', marginBottom: 6 }}>{label}</label>}
-      <input
-        name={name}
-        type={type}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        required={required}
-      />
-    </div>
-  );
+export default function ProtectedRoute({ children }) {
+  const { user } = useAuth();
+  if (!user) return <Navigate to="/login" replace />;
+  return children;
 }
