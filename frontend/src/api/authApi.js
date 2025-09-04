@@ -1,23 +1,24 @@
-import axios from 'axios';
+import axios from "axios";
 
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
-  withCredentials: true
+  baseURL: import.meta.env.VITE_API_URL, // Vercel me jo env set kiya hai
 });
 
-// Auth routes
-export const registerUser = (data) => API.post('/auth/register', data);
-export const loginUser = (data) => API.post('/auth/login', data);
-export const logoutUser = () => API.post('/auth/logout');
-export const forgotPassword = (data) => API.post('/auth/forgot-password', data);
-export const resetPassword = (token, id, data) => API.post(`/auth/reset-password?token=${token}&id=${id}`, data);
+// Register
+export const registerUser = (data) => API.post("/auth/register", data);
 
-// User protected
-export const getProfile = (token) => API.get('/users/profile', {
-  headers: { Authorization: `Bearer ${token}` }
-});
-export const updateProfile = (token, data) => API.put('/users/profile', data, {
-  headers: { Authorization: `Bearer ${token}` }
-});
+// Login
+export const loginUser = (data) => API.post("/auth/login", data);
 
-export default API;
+// Forgot password
+export const forgotPassword = (data) => API.post("/auth/forgot-password", data);
+
+// Reset password
+export const resetPassword = (token, data) =>
+  API.post(`/auth/reset-password/${token}`, data);
+
+// Get user profile
+export const getProfile = (token) =>
+  API.get("/users/profile", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
