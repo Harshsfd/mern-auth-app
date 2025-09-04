@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import { logoutUser } from '../api/authApi';
+import { useNavigate } from 'react-router-dom';
 
 export default function Logout() {
   const { logout } = useAuth();
@@ -12,12 +12,13 @@ export default function Logout() {
       try {
         await logoutUser();
       } catch (err) {
-        // ignore
+        // ignore network errors
+      } finally {
+        logout();
+        navigate('/login');
       }
-      logout();
-      navigate('/login');
     })();
   }, []);
 
-  return <div>Logging out...</div>;
+  return <div>Logging out…</div>;
 }
