@@ -1,24 +1,15 @@
-import React, { useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { logoutUser } from '../api/authApi';
-import { useNavigate } from 'react-router-dom';
+import React, { useContext, useEffect } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Logout() {
-  const { logout } = useAuth();
+  const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    (async () => {
-      try {
-        await logoutUser();
-      } catch (err) {
-        // ignore network errors
-      } finally {
-        logout();
-        navigate('/login');
-      }
-    })();
-  }, []);
+    logout();
+    navigate("/login");
+  }, [logout, navigate]);
 
-  return <div>Logging out…</div>;
+  return <p>Logging out...</p>;
 }
